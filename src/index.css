@@ -1,0 +1,34 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Comic Sans MS";
+}
+
+/* Apply custom scrollbar styles globally */
+html {
+  scrollbar-width: thin; /* For Firefox - sets the scrollbar width */
+  scrollbar-color: #c4c4c4 #f0f0f0; /* For Firefox - thumb color and track color */
+}
+
+html::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+  height: 8px; /* Height for horizontal scrollbars */
+}
+
+html::-webkit-scrollbar-thumb {
+  background: #c4c4c4; /* Color of the scrollbar thumb */
+  border-radius: 10px; /* Rounded edges for the thumb */
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background: #a4a4a4; /* Darker color on hover */
+}
+
+html::-webkit-scrollbar-track {
+  background: #f0f0f0; /* Background color of the scrollbar track */
+  border-radius: 10px; /* Rounded edges for the track */
+}
+
+h1, h2, h3, p, a {
+  font-family: "Comic Sans MS";
+}

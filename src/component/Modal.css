@@ -1,0 +1,274 @@
+/* Modal Content */
+.modal-content {
+  background-color: white; /* Ensure consistent background */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px; /* Add padding to the entire modal */
+  padding-bottom: 120px; /* Add more space at the bottom for the button */
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  transform: scale(0.5); /* Initial scale */
+  opacity: 0; /* Start invisible */
+  animation: popOut 0.3s forwards; /* Pop-out animation */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures spacing between content and button */
+}
+
+.profile-picture {
+  width: 100px; /* Set a smaller width */
+  height: 100px; /* Set a smaller height */
+  border-radius: 50%; /* Make the picture rounded */
+  display: block; /* Center alignment */
+  margin: 0 auto; /* Center horizontally */
+  margin-top: 20px; /* Add spacing from the top */
+  object-fit: cover; /* Ensure the image maintains aspect ratio */
+}
+
+/* Scoped styling for the user profile modal */
+/* Parent Container */
+.user-profile-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Horizontally center */
+  justify-content: center; /* Vertically center */
+  position: relative;
+  padding: 20px;
+  text-align: center; /* Ensure all text aligns properly */
+}
+
+/* Logout Button */
+.logout-button {
+  background-color: #fff;
+  color: #000; 
+  border-radius: 20px; 
+  border: 2px solid #000; 
+  font-size: 1rem; 
+  padding: .75rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; 
+  width: 130px; 
+  position: relative; /* Absolute positioning */
+  right: 20px; /* Position from the right */
+}
+
+/* Styling the logout button */
+.user-profile-modal .logout-button {
+  align-self: center;
+  background-color: #fff;
+  color: #000; 
+  border-radius: 20px; 
+  border: 2px solid #000; 
+  font-size: 1rem; 
+  padding: .75rem;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out; 
+  width: 130px; 
+  margin: 5px; 
+}
+
+.user-profile-modal .logout-button:hover {
+  background-color: rgb(235, 179, 179); 
+  color: #fff;
+}
+
+.user-info {
+  text-align: left; /* Center-align the text */
+  margin-top: 20px;
+}
+
+/* Keyframes for Fade-In */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+/* Keyframes for Pop-Out */
+@keyframes popOut {
+  from {
+      transform: scale(0.5);
+      opacity: 0;
+  }
+  to {
+      transform: scale(1);
+      opacity: 1;
+  }
+}
+
+/* Close Button */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: red;
+}
+
+.cart-modal {
+  width: 1000px;
+  max-width: 90%;
+  padding: 20px;
+  background-image: "/profile-background";
+  border-radius: 10px;
+  position: relative;
+  text-align: left;
+}
+
+.cart-item {
+  display: flex; /* Set the parent container as a flexbox */
+  align-items: center; /* Vertically align items */
+}
+
+.cart-item-image {
+  width: 100px; /* Set a fixed width */
+  height: 100px; /* Set a fixed height */
+  object-fit: cover; /* Maintain image aspect ratio */
+  margin-right: 15px; /* Add spacing between the image and text */
+  margin-left: 15px;
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.cart-table th,
+.cart-table td {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.item-name {
+  position: relative;
+  flex: 1; /* Allow the description to take up remaining space */
+  text-align: center; /* Ensure text alignment stays left-aligned */
+  font-size: 16px; /* Adjust font size if necessary */
+}
+
+.cart-summary {
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+}
+
+.favorites-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.favorites-table th,
+.favorites-table td {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+.favorite-item {
+  display: flex; /* Set the parent container as a flexbox */
+  align-items: center; /* Vertically align items */
+}
+
+.favorite-item-image {
+  width: 100px; /* Set a fixed width */
+  height: 100px; /* Set a fixed height */
+  object-fit: cover; /* Maintain image aspect ratio */
+  margin-right: 15px; /* Add spacing between the image and text */
+}
+
+/* Quantity Wrapper */
+.quantity-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centers elements horizontally */
+  gap: 10px; /* Adds space between buttons and the input */
+  margin: 10px 0; /* Adds vertical margin for spacing */
+}
+
+/* Quantity Wrapper */
+.quantity-wrapper {
+  display: flex;
+  align-items: center; /* Vertically align items */
+  justify-content: center; /* Centers elements horizontally */
+  gap: 15px; /* Increase spacing for better alignment */
+  margin: 10px 0; /* Adds vertical margin for spacing */
+}
+
+/* Quantity Input */
+.quantity-input {
+  width: 60px; /* Slightly wider for better centering */
+  text-align: center; /* Ensures number is centered */
+  font-size: 16px; /* Matches button size */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 5px 0; /* Ensures vertical centering */
+  box-sizing: border-box; /* Maintains padding and width consistency */
+}
+
+/* Quantity Buttons */
+.quantity-btn {
+  padding: 8px 14px; /* Ensure button dimensions match input */
+  font-size: 16px;
+  cursor: pointer;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
+}
+
+.quantity-btn:hover {
+  background-color: #e0e0e0;
+}
+
+/* Common styles for buttons */
+.view-product-button,
+.unfavourite-button {
+  padding: 10px 16px; /* Equal padding for consistency */
+  font-size: 14px; /* Uniform font size */
+  border: none; /* Remove borders */
+  border-radius: 16px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor */
+  transition: transform 0.2s ease, background-color 0.2s ease; /* Add hover and transform effect */
+  margin-right: 8px; /* Add spacing between buttons */
+  text-align: center; /* Center align text */
+  display: inline-block; /* Ensure buttons are inline-block */
+}
+
+/* Add-to-Cart button styles */
+.view-product-button {
+  background-color: #f4a261; /* Orange color */
+  color: white; /* White text */
+}
+
+.view-product-button:hover {
+  background-color: #e76f51; /* Darker orange on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* Unfavourite button styles */
+.unfavourite-button {
+  background-color: #ff4d4d; /* Light red background */
+  color: white; /* White text */
+}
+
+.unfavourite-button:hover {
+  background-color: #ff1a1a; /* Darker red on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}

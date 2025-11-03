@@ -1,0 +1,9 @@
+  /* Center the h2 */
+  .faq-category-page h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 2rem; /* Adjust font size for the title */
+    font-weight: bold;
+  }
+  

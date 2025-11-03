@@ -1,0 +1,85 @@
+.home-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+    margin: 15px;
+    flex-shrink: 0;
+}
+
+.home-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.home-card img {
+    width: 100px;
+    height: 150px;
+    margin-bottom: 15px;
+    object-fit: cover;
+}
+
+.top-product-name {
+    font-size: 1.1em;
+    margin: 10px 0;
+}
+
+.top-price {
+    font-size: 1.0em;
+    color: #121212;
+    margin-top: 5px;
+}
+
+/* Responsive Design for Layout */
+.top-seller-section {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping for responsiveness */
+    justify-content: center; /* Center the cards */
+    gap: 20px; /* Spacing between cards */
+    padding: 10px;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+    .home-card {
+        width: 220px; /* Slightly smaller cards for tablets */
+    }
+}
+
+@media (max-width: 768px) {
+    .home-card {
+        width: 180px; /* Adjust card width for smaller tablets */
+    }
+
+    .home-card img {
+        width: 80px;
+        height: 120px; /* Reduce image size */
+    }
+
+    .top-product-name {
+        font-size: 1em; /* Adjust font size for smaller screens */
+    }
+
+    .top-price {
+        font-size: 0.9em; /* Adjust font size for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+
+    .home-card img {
+        width: 70px;
+        height: 100px; /* Further reduce image size */
+    }
+
+    .top-product-name {
+        font-size: 0.9em; /* Further adjust font size */
+    }
+
+    .top-price {
+        font-size: 0.8em; /* Further adjust font size */
+    }
+}

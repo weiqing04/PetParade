@@ -1,0 +1,123 @@
+.admin-container {
+    padding: 20px;
+  }
+  
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .add-product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+  }
+  
+  .add-product h2 {
+    margin-bottom: 15px;
+  }
+  
+  .add-product input,
+  .add-product textarea,
+  .add-product button {
+    width: 50%;
+    margin: 10px 0;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-product button {
+    width: 20%;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .add-product button:hover {
+    background-color: #45a049;
+  }
+  
+  .product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+  
+  .product-card {
+    width: 200px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    text-align: center;
+    background-color: #f9f9f9;
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+  }
+  
+  .product-card h3 {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .product-card p {
+    font-size: 14px;
+    margin: 5px 0;
+  }
+  
+  .product-card .delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .product-card .delete-btn:hover {
+    background-color: #e53935;
+  }
+
+  .remove-btn {
+    background-color: #ff4d4f; /* Red color for remove button */
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+  
+  .remove-btn:hover {
+    background-color: #ff7875; /* Slightly lighter red on hover */
+  }
+
+  .category-select {
+    width: 100%; /* Full width */
+    max-width: 400px; /* Set a maximum width */
+    padding: 15px; /* Increase padding for a larger clickable area */
+    font-size: 18px; /* Larger font size */
+    border: 2px solid #ccc; /* Border styling */
+    border-radius: 5px; /* Rounded corners */
+    margin-top: 10px; /* Add spacing above */
+    margin-bottom: 20px; /* Add spacing below */
+    cursor: pointer; /* Pointer cursor */
+  }
+  
+  .category-select:focus {
+    outline: none; /* Remove focus outline */
+    border-color: #4CAF50; /* Green border on focus */
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5); /* Add shadow on focus */
+  }
+  
+  

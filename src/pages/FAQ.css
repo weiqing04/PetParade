@@ -1,0 +1,87 @@
+/* FAQ Page Styles */
+.faq-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* FAQ Categories Section */
+.faq-categories {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap; /* Enable wrapping for responsiveness */
+  gap: 20px; /* Adjust gap for better spacing */
+  margin-bottom: 40px;
+}
+
+.faq-category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #333;
+  transition: transform 0.3s ease, color 0.3s ease;
+  font-size: 1.2em; /* Slightly smaller font size for smaller screens */
+  padding: 15px; /* Adjust padding for smaller screens */
+  width: 100%; /* Full width on smaller screens */
+  max-width: 250px; /* Limit max width */
+  box-sizing: border-box; /* Ensure padding is included in the width */
+}
+
+.faq-category:hover {
+  color: #007bff;
+  transform: scale(1.1);
+}
+
+.faq-category-icon {
+  width: 150px; /* Adjust size for smaller screens */
+  height: 150px;
+  margin-bottom: 10px;
+  object-fit: cover;
+  padding: 5px; /* Reduce padding for smaller screens */
+  transition: box-shadow 0.3s ease;
+}
+
+.faq-category:hover .faq-category-icon {
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design for Small Screens */
+@media (max-width: 768px) {
+  .faq-page {
+      padding: 10px;
+  }
+
+  h1 {
+      font-size: 1.5em; /* Smaller font size for the title */
+  }
+
+  .faq-category {
+      font-size: 1em; /* Adjust font size for smaller screens */
+      padding: 10px;
+  }
+
+  .faq-category-icon {
+      width: 120px; /* Reduce icon size */
+      height: 120px;
+  }
+}
+
+@media (max-width: 480px) {
+  .faq-category {
+      font-size: 0.9em; /* Further reduce font size for very small screens */
+      padding: 5px;
+  }
+
+  .faq-category-icon {
+      width: 100px; /* Further reduce icon size */
+      height: 100px;
+  }
+}

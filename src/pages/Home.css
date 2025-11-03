@@ -1,0 +1,137 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 20px auto;
+    gap: 20px;
+}
+
+.title-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 30px 0;
+    margin: 0 auto;
+}
+
+.line {
+    flex-grow: 1;
+    height: 1px;
+    background-color: #000000;
+}
+
+.symbol {
+    font-size: 16px;
+    color: #000000;
+    margin: 20px;
+}
+
+.title {
+    font-size: 30px;
+    font-weight: bold;
+    color: #000000;
+    text-align: center;
+}
+
+.banner-section {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    /* Centers the inner content */
+}
+
+.banner-content {
+    max-width: 1200px;
+    /* Limits the inner content to 1200px */
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.top-seller-section {
+    max-width: 1500px;
+    margin: 0 auto;
+    /* Centers the cards */
+    display: flex;
+    flex-wrap: wrap;
+    /* Ensures the cards wrap to the next line */
+    justify-content: space-between;
+    /* Spreads out the cards evenly */
+    gap: 20px;
+    /* Adds spacing between cards */
+}
+
+.home-subtitle h2 {
+    font-size: 26px;
+}
+
+.top-seller-button {
+    background-color: transparent;
+    border-width: 2px;
+    border-radius: 20px;
+    border-color: rgb(234, 134, 104);
+    color: rgb(234, 134, 104);
+    padding: 10px 15px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    margin-left: 1200px;
+}
+
+.top-seller-button:hover {
+    background-color: rgb(234, 134, 104);
+    color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .card {
+        flex: 1 1 calc(33.33% - 20px);
+        /* 3 cards per row for tablet view */
+        max-width: calc(33.33% - 20px);
+    }
+
+    .top-seller-button {
+        width: 100%;
+        /* Button spans across the width */
+        margin-left: 0;
+        /* Ensure no extra margin pushing the button off screen */
+    }
+}
+
+@media (max-width: 768px) {
+    .card {
+        flex: 1 1 calc(50% - 20px);
+        /* 2 cards per row for smaller tablets */
+        max-width: calc(50% - 20px);
+    }
+
+    .top-seller-button {
+        width: 100%;
+        /* Button spans across the width */
+        margin-left: 0;
+        /* Ensure no extra margin pushing the button off screen */
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        flex: 1 1 100%;
+        /* 1 card per row for mobile view */
+        max-width: 100%;
+    }
+
+    .top-seller-button {
+        font-size: 12px;
+        /* Even smaller font for very small screens */
+        width: 100%;
+        /* Button spans across the width */
+        margin-left: 0;
+        /* Ensure no extra margin pushing the button off screen */
+    }
+
+}

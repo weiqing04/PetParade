@@ -1,0 +1,296 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    box-sizing: border-box; /* Include padding and borders in total dimensions */
+    width: 100%; /* Ensure the body spans the full width of the viewport */
+  }
+
+.about-container {
+    font-family: 'Poppins', sans-serif; /* Modern and clean font */
+    line-height: 1.6;
+    color: #333; /* Default text color for readability */
+}
+
+.about-header {
+    position: relative;
+    text-align: center;
+    color: white;
+    font-family: 'Poppins', sans-serif; /* Ensure uniform font for the header */
+}
+
+.about-header-image {
+    width: 100%;
+    height: 650px;
+    object-fit: cover; /* Ensures image fills space while maintaining proportions */
+    object-position: center; /* Centers the important part of the image */
+    display: block;
+    filter: brightness(63%); /* Darkens the image for better text visibility */
+}
+
+.header-text-overlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.header-title {
+    font-size: 4rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin: 0;
+    color: white; /* Clean white for the title */
+}
+
+.header-description {
+    font-size: 1.5rem;
+    margin-top: 10px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #ffffff; /* Clean white for the description */
+}
+
+/* About Main Section */
+.about-main {
+    background-color: #f9f9f9;
+  }
+  
+  /* Services Section */
+  .services-section {
+    background-color: #f9f1e9;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+    width: 100%;
+    position: relative;
+    left: -20px;
+  }
+  
+  .services-title {
+    font-size: 2.5rem;
+    color: #d97642;
+    margin-bottom: 20px;
+    font-weight: bold;
+  }
+  
+  .services-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 30px;
+    line-height: 1.6;
+  }
+  
+  .services-grid {
+    display: flex;
+    flex-wrap: wrap; /* Enable wrapping for responsiveness */
+    justify-content: center;
+    gap: 60px; /* Consistent spacing between service cards */
+  }
+  
+  .service-card {
+    text-align: center;
+    border: none;
+    background: none;
+    padding: 20px;
+    width: 100%;
+    max-width: 260px; /* Set a maximum width for each card */
+  }
+  
+  .service-image {
+    width: 100%;
+    max-width: 260px;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 0 auto 15px auto;
+  }
+  
+  .service-title {
+    font-size: 1.5rem;
+    margin: 10px 0;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .service-description {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  .image-description-section {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    background-color: #ffffff; /* White background for the section */
+    gap: 30px; /* Space between image and text */
+    box-sizing: border-box; /* Ensures proper spacing */
+}
+
+.description-image {
+    flex: 1;
+    width: 100%; /* Allow the image to take up the full available space */
+    max-width: 650px; /* Maintain the original width */
+    height: auto; /* Maintain aspect ratio */
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    margin: 0; /* Remove any default margin */
+    position: relative;
+}
+
+.description-content {
+    flex: 1;
+    text-align: left;
+    padding: 20px;
+    width: 100%; /* Allow text to resize dynamically */
+    max-width: 600px; /* Set a limit for the text container */
+}
+
+.description-title {
+    font-size: 2.5rem;
+    color: #d97642; /* Dark text for readability */
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+}
+
+.description-text {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.8;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .image-description-section {
+        flex-direction: column; /* Stack the image and text vertically */
+        gap: 20px;
+    }
+
+    .description-image {
+        width: 90%; /* Shrink image slightly for smaller screens */
+        max-width: 90%; /* Ensure it doesn't exceed the screen width */
+        height: auto; /* Maintain aspect ratio */
+    }
+
+    .description-content {
+        text-align: center; /* Center-align text on smaller screens */
+        padding: 10px;
+    }
+
+    .description-title {
+        font-size: 2rem; /* Adjust title size for smaller screens */
+    }
+
+    .description-text {
+        font-size: 1rem; /* Adjust text size for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .description-image {
+        width: 100%; /* Allow the image to fully span the screen */
+    }
+
+    .description-title {
+        font-size: 1.8rem; /* Further reduce title size */
+    }
+
+    .description-text {
+        font-size: 0.9rem; /* Adjust text size for very small screens */
+    }
+}
+
+
+.team-section {
+    padding: 40px 20px;
+    background-color: #f5eae1;;
+    text-align: center;
+  }
+  
+  .team-title {
+    font-size: 2.5rem;
+    color: #d97642;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+  }
+  
+  .team-description {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 40px;
+  }
+  
+  .team-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+  
+  .team-card {
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+  
+  .team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .team-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    object-fit: cover;
+  }
+  
+  .team-name {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333;
+  }
+  
+  .team-role {
+    font-size: 1rem;
+    color: #d97642;
+    margin-bottom: 10px;
+  }
+  
+  .team-bio {
+    font-size: 0.9rem;
+    color: #666;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 1024px) {
+    .product-card {
+      flex: 1 1 calc(50% - 40px); /* 2 cards per row */
+      max-width: calc(50% - 40px);
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .product-card {
+      flex: 1 1 calc(100% - 40px); /* 1 card per row */
+      max-width: calc(100% - 40px);
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .product-card {
+      flex: 1 1 100%; /* Full width for very small screens */
+      max-width: 100%;
+    }
+  }
