@@ -1,68 +1,155 @@
+Markdown
+
 # Pet Parade - E-commerce Website
 
-## Overview
-Pet Parade is an e-commerce platform designed to provide a seamless shopping experience for pet owners. The website specializes in selling a wide range of pet accessories, including pet food, toys, and health care products. 
+This is a full-stack e-commerce application for pet supplies, built with a React frontend and a Spring Boot backend.
 
-The project utilizes **React** for the frontend, **Java OOP** for backend logic, and is deployed on an **Apache Tomcat server**.
+* **Frontend (src):** React, React Router, Context API
+* **Backend (backend):** Spring Boot, Spring Data JPA, MySQL
 
----
+## Prerequisites
 
-## Features
-
-### Customer Features
-- **Product Categories**: Browse pet food, toys, and health care products.
-- **Search**: Easily find products with search and category filters.
-- **Shopping Cart**: Add, update, and remove items from the cart.
-
-### Admin Features
-- **Product Management**: Add and delete products.
+Before you begin, you will need the following installed on your system:
+* **Java JDK 8** (or 11)
+* **Node.js** (which includes npm)
+* **MySQL Server** (like MySQL Community Server or XAMPP)
+* **Git**
 
 ---
 
-## Technologies Used
+## How to Run the Project
 
-### Frontend
-- **React**: To build a dynamic and responsive user interface.
-- **HTML5 & CSS3**: For structuring and styling the pages.
+You will need to run two separate processes in two separate terminals:
+1.  **Backend Server** (Spring Boot on port 8080)
+2.  **Frontend App** (React on port 3000)
 
-### Backend
-- **Java (OOP)**: To implement core business logic and handle backend operations.
-- **Apache Tomcat**: To deploy and run the server-side application.
+### 1. Backend Setup (Terminal 1)
+
+**A. Clone the Repository**
+```bash
+git clone <your-repository-url>
+cd petparade-master
+B. Set Up the Database
+
+Open your MySQL client (e.g., MySQL Workbench, DBeaver).
+
+Run the following SQL script to create the database and tables:
+
+SQL
+
+-- Create the database
+CREATE DATABASE IF NOT EXISTS pet_parade_db;
+USE pet_parade_db;
+
+-- Create the users table
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    role VARCHAR(20) DEFAULT 'customer'
+);
+
+-- Insert the default Admin user
+INSERT INTO users (username, password, email, role) 
+VALUES ('Admin', 'admin123', 'admin@petparade.com', 'admin')
+ON DUPLICATE KEY UPDATE password='admin123', email='admin@petparade.com', role='admin';
+
+-- Create the products table (with image support)
+CREATE TABLE IF NOT EXISTS products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    description TEXT,
+    category VARCHAR(50),
+    image LONGBLOB,        -- Stores the image data
+    image_type VARCHAR(50) -- Stores the MIME type (e.g., "image/png")
+);
+
+-- Create the favourites table (links users to products)
+CREATE TABLE favourites (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  userId INT NOT NULL,
+  productId INT NOT NULL,
+  UNIQUE KEY uq_user_product (userId, productId),
+  CONSTRAINT fk_fav_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
+  CONSTRAINT fk_fav_product FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
 
 
----
+C. Configure the Backend
 
-## Installation & Setup
+Navigate to the backend folder:
 
-### Prerequisites
-- Node.js (for running the React app)
-- Apache Tomcat server
-- MVN Environment
-- Java JDK 8 or later
+Bash
 
-### Steps to Run the Project
+cd backend
+Open the file: backend/src/main/resources/application.properties
 
-#### Backend Setup
-1. Clone the repository:
-   ```bash
-   git clone <repository-url>
-   cd <repository-folder>/backend
-   ```
+Edit the spring.datasource properties to match your local MySQL username and password:
 
-2. Build and deploy the project:
-    ```bash
-    mvn tomcat7:run
-    ```
-#### Front Setup
-1. Navigate to the frontend folder:
-   ```bash
-   cd <repository-folder>/frontend
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Start the React development server:
-   ```bash
-   npm start
-   ```
+Properties
+
+# ...
+spring.datasource.url=jdbc:mysql://localhost:3306/pet_parade_db
+spring.datasource.username=your_mysql_username  # <-- EDIT THIS
+spring.datasource.password=your_mysql_password  # <-- EDIT THIS
+# ...
+D. Run the Backend
+
+In the same backend directory, run the application using the Maven wrapper:
+
+On Windows (PowerShell):
+
+PowerShell
+
+.\mvnw spring-boot:run
+On macOS/Linux:
+
+Bash
+
+./mvnw spring-boot:run
+Leave this terminal running. The backend API is now live at http://localhost:8080/api.
+
+2. Frontend Setup (Terminal 2)
+A. Open a new terminal
+
+Navigate to the project's root frontend folder (petparade-master):
+
+Bash
+
+cd petparade-master 
+(If you are still in the backend folder from the last step, just type cd ..)
+
+B. Configure the Frontend
+
+Create a new file in this directory named .env
+
+Add the following line to the .env file. This is required to fix a known issue with the proxy setting in package.json.
+
+DANGEROUSLY_DISABLE_HOST_CHECK=true
+C. Install Dependencies
+
+Run npm install to download all the React libraries.
+
+Bash
+
+npm install
+D. Run the Frontend
+
+Start the React development server:
+
+Bash
+
+npm start
+This command should automatically open your web browser to http://localhost:3000. The application is now fully running.
+
+Troubleshooting
+Error: npm : File C:\... \npm.ps1 cannot be loaded...
+
+If you see this error in your frontend terminal, your PowerShell is blocking scripts. Run this command in your PowerShell terminal and press Y to confirm:
+
+PowerShell
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+Then, try npm install or npm start again.
