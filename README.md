@@ -38,51 +38,8 @@ git clone <your-repository-url>
 cd petparade-master
 ```
 
-#### B. Set Up the Database
-Open your MySQL client (e.g., MySQL Workbench or DBeaver), then run the following SQL script:
 
-```sql
--- Create the database
-CREATE DATABASE IF NOT EXISTS pet_parade_db;
-USE pet_parade_db;
-
--- Create the users table
-CREATE TABLE IF NOT EXISTS users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    role VARCHAR(20) DEFAULT 'customer'
-);
-
--- Insert the default Admin user
-INSERT INTO users (username, password, email, role) 
-VALUES ('Admin', 'admin123', 'admin@petparade.com', 'admin')
-ON DUPLICATE KEY UPDATE password='admin123', email='admin@petparade.com', role='admin';
-
--- Create the products table (with image support)
-CREATE TABLE IF NOT EXISTS products (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    price DECIMAL(10, 2) NOT NULL,
-    description TEXT,
-    category VARCHAR(50),
-    image LONGBLOB,        -- Stores the image data
-    image_type VARCHAR(50) -- Stores the MIME type (e.g., "image/png")
-);
-
--- Create the favourites table (links users to products)
-CREATE TABLE favourites (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  userId INT NOT NULL,
-  productId INT NOT NULL,
-  UNIQUE KEY uq_user_product (userId, productId),
-  CONSTRAINT fk_fav_user FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE,
-  CONSTRAINT fk_fav_product FOREIGN KEY (productId) REFERENCES products(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
-```
-
-#### C. Configure the Backend
+#### B. Configure the Backend
 Navigate to the backend folder:
 ```bash
 cd backend
@@ -98,7 +55,7 @@ spring.datasource.username=your_mysql_username  # <-- EDIT THIS
 spring.datasource.password=your_mysql_password  # <-- EDIT THIS
 ```
 
-#### D. Run the Backend
+#### C. Run the Backend
 Run the Spring Boot application using the Maven wrapper:
 
 **On Windows (PowerShell):**
