@@ -85,4 +85,35 @@ public class ProductController {
             })
             .orElseGet(() -> ResponseEntity.notFound().build()); // Return 404 if product or image not found
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(
+            @PathVariable Integer id,
+            @RequestParam("name") String name,
+            @RequestParam("price") Double price,
+            @RequestParam("description") String description,
+            @RequestParam("category") String category,
+            @RequestParam("quantity") Integer quantity, // New param
+            @RequestParam(value = "image", required = false) MultipartFile imageFile
+    ) throws IOException {
+        
+        return productRepository.findById(id).map(product -> {
+            product.setName(name);
+            product.setPrice(price);
+            product.setDescription(description);
+            product.setCategory(category);
+            product.setQuantity(quantity); // Update quantity
+
+            if (imageFile != null && !imageFile.isEmpty()) {
+                try {
+                    product.setImage(imageFile.getBytes());
+                    product.setImageType(imageFile.getContentType());
+                } catch (IOException e) {
+                    throw new RuntimeException("Error updating image", e);
+                }
+            }
+            productRepository.save(product);
+            return ResponseEntity.ok(new MessageResponse("Product updated successfully"));
+        }).orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("Product not found")));
+    }
 }

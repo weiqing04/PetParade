@@ -3,176 +3,173 @@ import "./Admin.css";
 
 const Admin = () => {
   const [products, setProducts] = useState([]);
-  // [UPDATED] Changed 'image' to 'imageFile' to store the file object
-  const [newProduct, setNewProduct] = useState({ name: "", price: "", description: "", category: "", imageFile: null }); 
+  // [UPDATED] Added 'quantity' and 'id' to state
+  const [productForm, setProductForm] = useState({
+    id: null, // null means adding, value means editing
+    name: "",
+    price: "",
+    description: "",
+    category: "",
+    quantity: "", // New field
+    imageFile: null
+  });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch all products (Unchanged)
+  // Fetch products
   useEffect(() => {
-    fetch("/api/products")
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to fetch products");
-        return response.json();
-      })
-      .then((data) => setProducts(data))
-      .catch((error) => setError("Failed to load products"));
+    fetchProducts();
   }, []);
 
-  // [NEW] Handler to store the selected file object in state
+  const fetchProducts = () => {
+    fetch("/api/products")
+      .then((res) => res.json())
+      .then((data) => setProducts(data))
+      .catch(() => setError("Failed to load products"));
+  };
+
   const handleImageChange = (e) => {
-    setNewProduct({ ...newProduct, imageFile: e.target.files[0] });
+    setProductForm({ ...productForm, imageFile: e.target.files[0] });
   };
 
-  // [UPDATED] Modified to use FormData for file upload
-  const handleAddProduct = async () => {
-    // Destructure imageFile from the rest of the product data
-    const { imageFile, ...productData } = newProduct;
+  // [NEW] Populate form for editing
+  const handleEditClick = (product) => {
+    setProductForm({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      description: product.description,
+      category: product.category,
+      quantity: product.quantity || 0,
+      imageFile: null // Keep null unless they want to change it
+    });
+    window.scrollTo(0, 0); // Scroll to form
+  };
 
-    if (!productData.name || !productData.price || !productData.category) {
-        setError("Please fill out all fields");
-        return;
+  // [NEW] Cancel Edit
+  const handleCancelEdit = () => {
+    setProductForm({ id: null, name: "", price: "", description: "", category: "", quantity: "", imageFile: null });
+  };
+
+  const handleSubmit = async () => {
+    const { id, imageFile, ...data } = productForm;
+    if (!data.name || !data.price || !data.category || !data.quantity) {
+      setError("Please fill out all fields");
+      return;
     }
 
     setLoading(true);
-    setError("");
+    const formData = new FormData();
+    formData.append("name", data.name);
+    formData.append("price", data.price);
+    formData.append("description", data.description);
+    formData.append("category", data.category);
+    formData.append("quantity", data.quantity);
+    if (imageFile) formData.append("image", imageFile);
 
     try {
-        // 1. Create FormData
-        const formData = new FormData();
+      // [UPDATED] Logic to switch between POST (Add) and PUT (Update)
+      const url = id ? `/api/products/${id}` : "/api/products";
+      const method = id ? "PUT" : "POST";
 
-        // 2. Append all text fields
-        formData.append("name", productData.name);
-        formData.append("price", productData.price);
-        formData.append("description", productData.description);
-        formData.append("category", productData.category);
-
-        // 3. Append the file if one was selected
-        if (imageFile) {
-            // 'image' is the field name the backend will look for
-            formData.append("image", imageFile); 
-        }
-
-        const response = await fetch("/api/products", {
-            method: "POST",
-            // [UPDATED] REMOVE the 'Content-Type': 'application/json' header.
-            // The browser will automatically set the correct 'multipart/form-data' header.
-            body: formData, // Send the FormData object
-        });
-
-        const result = await response.text(); 
-
-        if (response.ok) {
-            const createdProduct = JSON.parse(result);
-            setProducts([...products, createdProduct]);
-            // [UPDATED] Reset the form, including the imageFile state
-            setNewProduct({ name: "", price: "", description: "", category: "", imageFile: null }); 
-        } else {
-            setError(result); 
-        }
-    } catch (err) {
-        setError("Error adding product");
-    } finally {
-        setLoading(false);
-    }
-  };
-
-  // Remove a product (Unchanged)
-  const handleRemoveProduct = async (id) => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await fetch(`/api/products/${id}`, {
-        method: "DELETE",
+      const response = await fetch(url, {
+        method: method,
+        body: formData,
       });
 
       if (response.ok) {
-        const updatedResponse = await fetch("/api/products");
-        const updatedProducts = await updatedResponse.json();
-        setProducts(updatedProducts);
+        alert(id ? "Product Updated!" : "Product Added!");
+        fetchProducts(); // Refresh list
+        handleCancelEdit(); // Reset form
       } else {
-        setError("Failed to remove product");
+        const msg = await response.text();
+        setError(msg);
       }
-    } catch {
-      setError("Error removing product");
+    } catch (err) {
+      setError("Operation failed");
     } finally {
       setLoading(false);
     }
   };
 
+  const handleRemoveProduct = async (id) => {
+    if(!window.confirm("Are you sure?")) return;
+    await fetch(`/api/products/${id}`, { method: "DELETE" });
+    fetchProducts();
+  };
+
   return (
     <div className="admin-container">
-      <h1>Admin - Manage Products</h1>
+      <h1>Admin Dashboard</h1>
 
-      {/* Add Product Section */}
       <div className="add-product">
-        <h2>Add Product</h2>
+        <h2>{productForm.id ? "Edit Product" : "Add New Product"}</h2>
+        
         <input
-          type="text"
-          placeholder="Name"
-          value={newProduct.name}
-          onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
+          type="text" placeholder="Name" value={productForm.name}
+          onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
         />
-        <input
-          type="number"
-          placeholder="Price"
-          value={newProduct.price}
-          onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-        />
+        <div style={{display: 'flex', gap: '10px', width: '50%'}}>
+            <input
+            type="number" placeholder="Price" value={productForm.price}
+            onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+            />
+            {/* [NEW] Quantity Input */}
+            <input
+            type="number" placeholder="Qty" value={productForm.quantity}
+            onChange={(e) => setProductForm({ ...productForm, quantity: e.target.value })}
+            />
+        </div>
         <textarea
-          placeholder="Description"
-          value={newProduct.description}
-          onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
+          placeholder="Description" value={productForm.description}
+          onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
         />
         <select
-          value={newProduct.category}
-          onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+          value={productForm.category}
+          onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
           className="category-select"
         >
-          <option value="">Select Product Category</option>
+          <option value="">Select Category</option>
           <option value="cat">Cat</option>
           <option value="dog">Dog</option>
           <option value="small-pet">Small Pet</option>
         </select>
-        
-        {/* --- [NEW] Image Upload Section --- */}
+
         <label className="image-upload-label">
-          Product Image:
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-          />
-          {/* Show the selected file name */}
-          {newProduct.imageFile && <span className="file-name">{newProduct.imageFile.name}</span>}
+          {productForm.id ? "Change Image (Optional):" : "Product Image:"}
+          <input type="file" accept="image/*" onChange={handleImageChange} />
         </label>
-        {/* ---------------------------------- */}
-        
-        <button className="add-btn" onClick={handleAddProduct} disabled={loading}>
-          {loading ? "Adding..." : "Add Product"}
-        </button>
+
+        <div style={{display: 'flex', gap: '10px', justifyContent: 'center', width: '100%'}}>
+            <button className="add-btn" onClick={handleSubmit} disabled={loading}>
+            {loading ? "Saving..." : (productForm.id ? "Update Product" : "Add Product")}
+            </button>
+            {productForm.id && (
+                <button className="remove-btn" onClick={handleCancelEdit} style={{backgroundColor: '#666', marginTop: 0}}>
+                    Cancel
+                </button>
+            )}
+        </div>
       </div>
 
-      {/* Error Message */}
       {error && <p className="error-message">{error}</p>}
 
-      {/* Product List (Unchanged) */}
       <div className="product-list">
         {products.map((product) => (
           <div key={product.id} className="product-card">
-            <img 
+             <img 
               src={product.image ? `data:${product.imageType};base64,${product.image}` : "/default-image.png"} 
               alt={product.name} 
               className="product-image" 
             />
             <h3>{product.name}</h3>
-            <p>Price: RM {product.price}</p>
-            <p>{product.description}</p>
-            <p>Category: {product.category}</p>
-            <button
-              className="remove-btn"
-              onClick={() => handleRemoveProduct(product.id)}
-            >
+            <p>RM {product.price} | Stock: {product.quantity}</p>
+            
+            {/* [NEW] Edit Button */}
+            <button className="view-product-button" style={{marginTop: '10px'}} onClick={() => handleEditClick(product)}>
+                Edit
+            </button>
+            <button className="remove-btn" onClick={() => handleRemoveProduct(product.id)}>
               Remove
             </button>
           </div>

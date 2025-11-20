@@ -271,4 +271,34 @@
 .unfavourite-button:hover {
   background-color: #ff1a1a; /* Darker red on hover */
   transform: scale(1.05); /* Slightly enlarge on hover */
+
+  color: white;
+  background-color: #28a745; /* Green for 'Go' action */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
+
+.checkout-btn:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.checkout-btn:active {
+  transform: translateY(0);
+}
+
+/* Cart Summary Styling Update */
+.cart-summary {
+  margin-top: 25px;
+  padding-top: 15px;
+  border-top: 2px solid #f0f0f0;
+  font-size: 20px;
+  font-weight: 800;
+  text-align: right;
+  color: #333;
+}
+

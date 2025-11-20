@@ -11,6 +11,7 @@ public class Product {
     private Double price;
     private String description;
     private String category;
+    private Integer quantity;
     
     // [MODIFIED] Use byte[] for BLOB storage and add @Lob
     @Lob 
@@ -23,7 +24,8 @@ public class Product {
     public Double getPrice() { return price; }
     public String getDescription() { return description; }
     public String getCategory() { return category; }
-    
+    public Integer getQuantity() { return quantity; }
+    public void setQuantity(Integer quantity) { this.quantity = quantity; }
     // [MODIFIED] Getter returns byte[]
     public byte[] getImage() { return image; }
 

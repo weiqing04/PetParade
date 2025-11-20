@@ -60,6 +60,10 @@ const Modal = ({ product, closeModal, addToCart }) => {
   };
 
   const handleAddToCart = () => {
+    if (product.quantity <= 0) {
+        alert("Item is out of stock!");
+        return;
+    }
     addToCart(product, quantity);
     closeModal();
   };

@@ -5,7 +5,8 @@ import { useFavourites } from "../Favourite";
 import { useNavigate } from "react-router-dom";
 
 const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
-  const { cartItems, updateQuantity } = useCart();
+  // [UPDATED] Added clearCart to destructuring
+  const { cartItems, updateQuantity, clearCart } = useCart();
   const { favourites, removeFromFavourites } = useFavourites();
   const navigate = useNavigate();
 
@@ -19,6 +20,50 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
       }
     } else {
       updateQuantity(id, -1);
+    }
+  };
+
+  // [NEW] Handle Checkout Function
+  const handleCheckout = async () => {
+    const username = localStorage.getItem("username");
+    if (!username) {
+        alert("Please login to checkout");
+        return;
+    }
+
+    if (cartItems.length === 0) {
+        alert("Cart is empty!");
+        return;
+    }
+
+    // Format data for backend DTO
+    const checkoutData = {
+        username: username,
+        paymentMethod: "Credit Card", // Hardcoded for now
+        items: cartItems.map(item => ({
+            productId: item.id,
+            quantity: item.quantity
+        }))
+    };
+
+    try {
+        const response = await fetch("/api/orders/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(checkoutData)
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            alert(data.message); // "Order placed successfully!"
+            clearCart(); // Clear frontend cart
+            onClose(); // Close modal
+        } else {
+            alert("Checkout failed: " + data.message);
+        }
+    } catch (error) {
+        console.error("Checkout error:", error);
+        alert("Checkout failed. Check console.");
     }
   };
 
@@ -41,7 +86,6 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
                     <tr key={item.id}>
                       <td>
                         <div className="favorite-item">
-                          {/* [MODIFIED] This img tag now displays the Base64 image */}
                           <img
                             src={item.image ? `data:${item.imageType};base64,${item.image}` : "/default-image.png"}
                             alt={item.name}
@@ -98,7 +142,6 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
                   <tr key={item.id}>
                     <td>
                       <div className="cart-item">
-                        {/* [MODIFIED] This img tag now displays the Base64 image */}
                         <img 
                           src={item.image ? `data:${item.imageType};base64,${item.image}` : "/default-image.png"} 
                           alt={item.name} 
@@ -107,22 +150,34 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
                         <span className="item-name">{item.name}</span>
                       </div>
                     </td>
-                    <td>${item.price}</td>
+                    <td>RM {item.price}</td>
                     <td>
                       <button onClick={() => handleDecrement(item.id, item.quantity)}>-</button>
                       <span>{item.quantity}</span>
                       <button onClick={() => updateQuantity(item.id, 1)}>+</button>
                     </td>
-                    <td>${(item.price * item.quantity).toFixed(2)}</td>
+                    <td>RM {(item.price * item.quantity).toFixed(2)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
+            
             <div className="cart-summary">
               <span>
-                Subtotal: $
+                Subtotal: RM 
                 {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
               </span>
+            </div>
+
+            {/* [NEW] Checkout Button */}
+            <div style={{textAlign: 'right', marginTop: '20px'}}>
+                <button 
+                    className="view-product-button" 
+                    onClick={handleCheckout}
+                    style={{width: '100%', padding: '15px', fontSize: '1.1rem'}}
+                >
+                    Proceed to Checkout
+                </button>
             </div>
           </>
         );
