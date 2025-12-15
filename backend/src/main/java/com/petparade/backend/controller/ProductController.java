@@ -24,8 +24,6 @@ public class ProductController {
     // GET /api/products (Unchanged)
     @GetMapping
     public List<Product> getAllProducts() {
-        // NOTE: When retrieving all products, the image BLOB data will be included, 
-        // which can be very large. Consider a DTO for lightweight lists.
         return productRepository.findAll();
     }
 
@@ -45,13 +43,13 @@ public class ProductController {
         product.setDescription(description);
         product.setCategory(category);
 
-        // [MODIFIED] Handle File Upload (BLOB storage)
+        //Handle File Upload (BLOB storage)
         if (imageFile != null && !imageFile.isEmpty()) {
             // Convert the uploaded file into a byte array
             product.setImage(imageFile.getBytes()); 
             product.setImageType(imageFile.getContentType());
         } else {
-            // Optional: Set a default empty byte array or handle error
+            // Set a default empty byte array or handle error
             product.setImage(null); 
         }
 
@@ -76,7 +74,6 @@ public class ProductController {
             .map(product -> {
                 // 2. Prepare headers
                 HttpHeaders headers = new HttpHeaders();
-                // We'll default to JPEG, but ideally, you'd store the image content type too
                 headers.setContentType(MediaType.IMAGE_JPEG); 
                 headers.setContentLength(product.getImage().length);
                 

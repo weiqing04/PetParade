@@ -30,7 +30,6 @@ public class OrderProduct {
     public Product getProduct() { return product; }
     public void setProduct(Product product) { this.product = product; }
 
-    // [FIX] Add these missing getters to remove the warning
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
 

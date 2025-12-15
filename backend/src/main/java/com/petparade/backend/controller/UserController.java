@@ -44,9 +44,7 @@ public class UserController {
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setEmail(email);
-            // !! IMPORTANT: Hash your password in a real application!
-            // Example: newUser.setPassword(passwordEncoder.encode(password));
-            newUser.setPassword(password); // Storing plain text for this example ONLY.
+            newUser.setPassword(password); 
             newUser.setRole("customer");
             userRepository.save(newUser);
             return ResponseEntity.ok(new MessageResponse("User registered successfully"));

@@ -13,7 +13,6 @@ public class Product {
     private String category;
     private Integer quantity;
     
-    // [MODIFIED] Use byte[] for BLOB storage and add @Lob
     @Lob 
     private byte[] image; 
     private String imageType;
@@ -26,7 +25,6 @@ public class Product {
     public String getCategory() { return category; }
     public Integer getQuantity() { return quantity; }
     public void setQuantity(Integer quantity) { this.quantity = quantity; }
-    // [MODIFIED] Getter returns byte[]
     public byte[] getImage() { return image; }
 
     // --- Add/Modify Setters ---
@@ -34,8 +32,6 @@ public class Product {
     public void setPrice(Double price) { this.price = price; }
     public void setDescription(String description) { this.description = description; }
     public void setCategory(String category) { this.category = category; }
-    
-    // [MODIFIED] Setter accepts byte[]
     public void setImage(byte[] image) { this.image = image; }
 
     public String getImageType() { return imageType; }
