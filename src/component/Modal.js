@@ -5,17 +5,28 @@ import { useFavourites } from "../Favourite";
 import { useNavigate } from "react-router-dom";
 
 const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
-  // [UPDATED] Added clearCart to destructuring
   const { cartItems, updateQuantity, clearCart } = useCart();
-  const { favourites, removeFromFavourites } = useFavourites();
+  const { favourites, addToFavourites, removeFromFavourites } = useFavourites();
   const navigate = useNavigate();
 
   if (!isOpen) return null;
 
+  // Helper to check if item is in favourites
+  const isFavorited = (productId) => {
+    return Array.isArray(favourites) && favourites.some(fav => fav.id === productId);
+  };
+
+  const handleToggleFavorite = (item) => {
+    if (isFavorited(item.id)) {
+      removeFromFavourites(item.id);
+    } else {
+      addToFavourites(item);
+    }
+  };
+
   const handleDecrement = (id, quantity) => {
     if (quantity === 1) {
-      const confirmRemoval = window.confirm("Do you want to remove this product from the cart?");
-      if (confirmRemoval) {
+      if (window.confirm("Remove this item from cart?")) {
         updateQuantity(id, -1);
       }
     } else {
@@ -23,23 +34,29 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
     }
   };
 
-  // [NEW] Handle Checkout Function
+  const handleRemove = (id) => {
+      // Find the item to know its quantity for full removal
+      const item = cartItems.find(i => i.id === id);
+      if (item && window.confirm("Are you sure you want to remove this item?")) {
+          // Decrement by the full quantity to remove it
+          updateQuantity(id, -item.quantity); 
+      }
+  };
+
   const handleCheckout = async () => {
     const username = localStorage.getItem("username");
     if (!username) {
         alert("Please login to checkout");
         return;
     }
-
     if (cartItems.length === 0) {
         alert("Cart is empty!");
         return;
     }
 
-    // Format data for backend DTO
     const checkoutData = {
         username: username,
-        paymentMethod: "Credit Card", // Hardcoded for now
+        paymentMethod: "Credit Card",
         items: cartItems.map(item => ({
             productId: item.id,
             quantity: item.quantity
@@ -55,9 +72,9 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
 
         const data = await response.json();
         if (response.ok) {
-            alert(data.message); // "Order placed successfully!"
-            clearCart(); // Clear frontend cart
-            onClose(); // Close modal
+            alert(data.message);
+            clearCart();
+            onClose();
         } else {
             alert("Checkout failed: " + data.message);
         }
@@ -71,126 +88,136 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
     switch (content) {
       case "Favorite Items":
         return (
-          <>
-            <h2>Your Favorites</h2>
-            <table className="favorites-table">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
+          <div className="shopping-cart">
+             <div className="title">Your Favorites</div>
+             <div className="favorites-list">
                 {Array.isArray(favourites) && favourites.length > 0 ? (
                   favourites.map((item) => (
-                    <tr key={item.id}>
-                      <td>
-                        <div className="favorite-item">
-                          <img
-                            src={item.image ? `data:${item.imageType};base64,${item.image}` : "/default-image.png"}
-                            alt={item.name}
-                            className="favorite-item-image"
-                          />
-                          <span className="item-name">{item.name}</span>
-                        </div>
-                      </td>
-                      <td>
-                        <button
-                          className="view-product-button"
-                          onClick={() => {
-                            onClose();
-                            navigate("/product", { state: { product: item } });
-                          }}
+                    <div className="item" key={item.id}>
+                      <div className="image">
+                        <img 
+                            src={item.image ? `data:${item.imageType};base64,${item.image}` : "/default-image.png"} 
+                            alt={item.name} 
+                        />
+                      </div>
+                      <div className="description">
+                        <span>{item.name}</span>
+                        <span>{item.category || 'Pet Product'}</span>
+                      </div>
+                      <div className="actions">
+                        <button 
+                            className="btn-view"
+                            onClick={() => {
+                                onClose();
+                                navigate("/product", { state: { product: item } });
+                            }}
                         >
-                          View Product
+                            View
                         </button>
-                        <button
-                          className="unfavourite-button"
-                          onClick={async () => {
-                            await removeFromFavourites(item.id);
-                          }}
+                        <button 
+                            className="btn-remove"
+                            onClick={() => removeFromFavourites(item.id)}
                         >
-                          Unfavourite
+                            Remove
                         </button>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   ))
                 ) : (
-                  <tr>
-                    <td colSpan="2">No favorites yet.</td>
-                  </tr>
+                  <div className="empty-msg">No favorites yet.</div>
                 )}
-              </tbody>
-            </table>
-          </>
+             </div>
+          </div>
         );
+
       case "Cart Items":
         return (
-          <>
-            <h2>Your Cart</h2>
-            <table className="cart-table">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Price</th>
-                  <th>Quantity</th>
-                  <th>Total</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cartItems.map((item) => (
-                  <tr key={item.id}>
-                    <td>
-                      <div className="cart-item">
-                        <img 
-                          src={item.image ? `data:${item.imageType};base64,${item.image}` : "/default-image.png"} 
-                          alt={item.name} 
-                          className="cart-item-image" 
-                        />
-                        <span className="item-name">{item.name}</span>
-                      </div>
-                    </td>
-                    <td>RM {item.price}</td>
-                    <td>
-                      <button onClick={() => handleDecrement(item.id, item.quantity)}>-</button>
-                      <span>{item.quantity}</span>
-                      <button onClick={() => updateQuantity(item.id, 1)}>+</button>
-                    </td>
-                    <td>RM {(item.price * item.quantity).toFixed(2)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            
-            <div className="cart-summary">
-              <span>
-                Subtotal: RM 
-                {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
-              </span>
+          <div className="shopping-cart">
+            <div className="title">Shopping Bag</div>
+
+            <div className="cart-items-container">
+                {cartItems.length === 0 ? (
+                    <div className="empty-msg">Your cart is empty.</div>
+                ) : (
+                    cartItems.map((item) => (
+                    <div className="item" key={item.id}>
+                        {/* Buttons (Delete & Like) */}
+                        <div className="buttons">
+                            <span className="delete-btn" onClick={() => handleRemove(item.id)}>
+                                <i className="fas fa-times"></i>
+                            </span>
+                            <span 
+                                className={`like-btn ${isFavorited(item.id) ? "is-active" : ""}`} 
+                                onClick={() => handleToggleFavorite(item)}
+                            >
+                                <i className={`fas fa-heart ${isFavorited(item.id) ? "liked" : ""}`}></i>
+                            </span>
+                        </div>
+
+                        {/* Image */}
+                        <div className="image">
+                            <img 
+                                src={item.image ? `data:${item.imageType};base64,${item.image}` : "/default-image.png"} 
+                                alt={item.name} 
+                            />
+                        </div>
+
+                        {/* Description */}
+                        <div className="description">
+                            <span>{item.name}</span>
+                            <span>{item.category || "General"}</span>
+                            <span className="item-price-unit">RM {item.price}</span>
+                        </div>
+
+                        {/* Quantity */}
+                        <div className="quantity">
+                            <button 
+                                className="plus-btn" 
+                                type="button" 
+                                onClick={() => updateQuantity(item.id, 1)}
+                            >
+                                <i className="fas fa-plus"></i>
+                            </button>
+                            <input type="text" value={item.quantity} readOnly />
+                            <button 
+                                className="minus-btn" 
+                                type="button" 
+                                onClick={() => handleDecrement(item.id, item.quantity)}
+                            >
+                                <i className="fas fa-minus"></i>
+                            </button>
+                        </div>
+
+                        {/* Total Price for Item */}
+                        <div className="total-price">
+                            RM {(item.price * item.quantity).toFixed(2)}
+                        </div>
+                    </div>
+                    ))
+                )}
             </div>
 
-            {/* [NEW] Checkout Button */}
-            <div style={{textAlign: 'right', marginTop: '20px'}}>
-                <button 
-                    className="view-product-button" 
-                    onClick={handleCheckout}
-                    style={{width: '100%', padding: '15px', fontSize: '1.1rem'}}
-                >
-                    Proceed to Checkout
-                </button>
-            </div>
-          </>
+            {/* Footer / Summary */}
+            {cartItems.length > 0 && (
+                <div className="cart-footer">
+                    <div className="cart-summary">
+                        <span>Total:</span>
+                        <span className="grand-total">
+                            RM {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0).toFixed(2)}
+                        </span>
+                    </div>
+                    <button className="checkout-btn" onClick={handleCheckout}>Checkout</button>
+                </div>
+            )}
+          </div>
         );
+
       case "User Profile":
         return (
           <div className="user-profile-modal">
             <h2>User Profile</h2>
             <div className="user-profile">
-              <img
-                src="/profile.png" // Hardcoded profile picture
-                alt="Profile"
-                className="profile-picture"
-              />
+              <img src="/profile.png" alt="Profile" className="profile-picture" />
               <div className="user-info">
                 <p><strong>Name:</strong> {userProfile?.name || "Unknown"}</p>
                 <p><strong>Email:</strong> {userProfile?.email || "Unknown"}</p>
@@ -209,9 +236,7 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
   return (
     <div className="modal-overlay" onClick={onClose}>
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="close-button" onClick={onClose}>
-          &times;
-        </button>
+        <button className="close-button" onClick={onClose}>&times;</button>
         {renderContent()}
       </div>
     </div>

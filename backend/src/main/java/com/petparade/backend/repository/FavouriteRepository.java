@@ -4,7 +4,8 @@ import com.petparade.backend.model.Favourite;
 import com.petparade.backend.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param; // [NEW] Import this
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional; // Import this
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +20,8 @@ public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
 
     @Query("SELECT (COUNT(f) > 0) FROM Favourite f WHERE f.user.id = :userId AND f.product.id = :productId")
     boolean existsByUserIdAndProductId(@Param("userId") Integer userId, @Param("productId") Integer productId);
+
+    //Allow deleting favorites for a specific product
+    @Transactional
+    void deleteByProductId(Integer productId);
 }

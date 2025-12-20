@@ -35,13 +35,13 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
   padding: 20px;
-  position: relative;
+  position: relative; /* Necessary for absolute positioning of status message */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   overflow: hidden;
   margin-bottom: 40px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Pushes buttons to bottom */
+  justify-content: space-between;
 }
 
 .product-card:hover {
@@ -79,7 +79,6 @@
   margin-bottom: 5px;
 }
 
-/* New Stock Label */
 .product-stock {
   font-size: 13px;
   color: #777;
@@ -100,7 +99,7 @@
   margin-bottom: 20px;
 }
 
-/* --- Buttons --- */
+/* --- Buttons (Shared Style) --- */
 .button-container {
   display: flex;
   justify-content: center;
@@ -146,7 +145,48 @@
   color: #e66c6c;
 }
 
-/* --- Modal Styles (This fixes the broken popup) --- */
+/* --- Status Message (Prevents layout shift) --- */
+.status-message {
+  position: absolute;
+  bottom: 75px; /* Positions message above the buttons area */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 8px 15px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-size: 12px;
+  color: #333;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  white-space: nowrap;
+  z-index: 10;
+  pointer-events: none;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+._add-to-cart {
+  margin-top: 30px;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 20px; /* Rounded pill shape */
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  color: #41403e;
+  cursor: pointer;
+  font-family: "Comic Sans MS", sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: all 235ms ease-in-out;
+  user-select: none;
+  width: 140px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translate(-50%, 10px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* --- Enhanced Modal Styles --- */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -165,72 +205,143 @@
   background-image: url(/public/profile-background.png); /* Ensure this image exists */
   padding: 30px;
   border-radius: 15px;
-  width: 400px;
+  width: 300px;
   max-width: 90%;
   position: relative;
   text-align: center;
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  height: 400px;
 }
 
+/* Close Button */
 .close-btn {
   position: absolute;
-  top: 10px;
+  top: 15px;
   right: 15px;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.9);
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
   border: none;
-  font-size: 24px;
-  font-weight: bold;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  font-size: 18px;
   color: #333;
   cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
 }
 
 .close-btn:hover {
-  color: red;
+  background-color: #ff4d4d;
+  color: white;
+}
+
+/* Image Section */
+.modal-image-container {
+  background-color: #f4f4eb; /* Falls back if image is transparent */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  object-fit: contain;
+  padding: 50px;
 }
 
 .modal-product-image {
-  width: 150px;
-  height: 150px;
-  margin-bottom: 15px;
+  margin-top: 30px;
+  max-width: 250px;
+  max-height: 100px;
   object-fit: contain;
-  border-radius: 10px;
+  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+  transition: transform 0.3s ease;
 }
 
-/* --- Quantity Controls in Modal --- */
+/* Content Section */
+.modal-content {
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+  font-family: "Comic Sans MS", "Arial", sans-serif;
+}
+
+.modal-description {
+  font-size: 14px;
+  color: #666;
+  margin: 10px 0;
+}
+
+.modal-price-tag {
+  font-size: 24px;
+  font-weight: 800;
+  color: #4f250f;
+  margin-bottom: 10px;
+}
+
+/* Footer Container (Vertical Stack) */
+.modal-footer-vertical {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px; /* Space between quantity and button */
+  width: 100%;
+}
+
+/* Quantity Wrapper */
 .quantity-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 15px;
-  margin: 20px 0;
+  gap: 10px;
 }
 
 .quantity-btn {
-  width: 35px;
-  height: 35px;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 18px;
-  font-weight: bold;
+  width: 30px;
+  height: 30px;
+  background-color: #E1E8EE;
+  border-radius: 6px;
+  border: none;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
+  color: #5E6977;
+  font-size: 12px;
   transition: background-color 0.2s;
 }
 
 .quantity-btn:hover {
-  background-color: #eee;
+  background-color: #d0dbe4;
 }
 
 .quantity-input {
-  width: 50px;
-  height: 35px;
+  border: none;
   text-align: center;
-  font-size: 18px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  outline: none;
-  font-family: "Comic Sans MS";
+  width: 32px;
+  font-size: 20px;
+  color: #43484D;
+  font-weight: 300;
+  background: transparent;
+  margin-left: 12px;
+}
+
+/* Animations */
+@keyframes fadeInOverlay {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUpCard {
+  from { opacity: 0; transform: translateY(50px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
 }

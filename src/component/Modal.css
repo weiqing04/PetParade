@@ -1,21 +1,30 @@
-/* Modal Content */
-.modal-content {
-  background-color: white; /* Ensure consistent background */
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 20px; /* Add padding to the entire modal */
-  padding-bottom: 120px; /* Add more space at the bottom for the button */
-  max-width: 500px;
-  width: 90%;
-  position: relative;
-  transform: scale(0.5); /* Initial scale */
-  opacity: 0; /* Start invisible */
-  animation: popOut 0.3s forwards; /* Pop-out animation */
+/* --- Modal Container & Overlay --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* Dimmed background */
+  backdrop-filter: blur(3px);
   display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* Ensures spacing between content and button */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
+.modal-content {
+  background-color: #FFFFFF;
+  border-radius: 6px;
+  box-shadow: 1px 2px 3px 0px rgba(0,0,0,0.10);
+  width: 800px;
+  max-width: 95%;
+  max-height: 90vh;
+  overflow-y: auto; /* Scroll if list is long */
+  position: relative;
+  padding: 0; /* Padding handled by internal shopping-cart div */
+  animation: popOut 0.3s forwards;
+}
 .profile-picture {
   width: 100px; /* Set a smaller width */
   height: 100px; /* Set a smaller height */
@@ -50,7 +59,6 @@
   transition: all 0.3s ease-in-out; 
   width: 130px; 
   position: relative; /* Absolute positioning */
-  right: 20px; /* Position from the right */
 }
 
 /* Styling the logout button */
@@ -100,205 +108,282 @@
   }
 }
 
-/* Close Button */
+/* Close "X" Button (Top Right) */
 .close-button {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 20px;
+  right: 30px;
   background: none;
   border: none;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.close-button:hover {
-  color: red;
-}
-
-.cart-modal {
-  width: 1000px;
-  max-width: 90%;
-  padding: 20px;
-  background-image: "/profile-background";
-  border-radius: 10px;
-  position: relative;
-  text-align: left;
-}
-
-.cart-item {
-  display: flex; /* Set the parent container as a flexbox */
-  align-items: center; /* Vertically align items */
-}
-
-.cart-item-image {
-  width: 100px; /* Set a fixed width */
-  height: 100px; /* Set a fixed height */
-  object-fit: cover; /* Maintain image aspect ratio */
-  margin-right: 15px; /* Add spacing between the image and text */
-  margin-left: 15px;
-}
-
-.cart-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
-}
-
-.cart-table th,
-.cart-table td {
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
-  text-align: left;
-}
-
-.item-name {
-  position: relative;
-  flex: 1; /* Allow the description to take up remaining space */
-  text-align: center; /* Ensure text alignment stays left-aligned */
-  font-size: 16px; /* Adjust font size if necessary */
-}
-
-.cart-summary {
-  margin-top: 20px;
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
-  text-align: right;
+  color: #5E6977;
+  cursor: pointer;
+  z-index: 10;
 }
+.close-button:hover { color: #E74C3C; }
 
-.favorites-table {
+/* --- Shopping Cart Design (Ported from style.css) --- */
+.shopping-cart {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Roboto', sans-serif; /* Ensuring font matches design */
 }
 
-.favorites-table th,
-.favorites-table td {
-  border-bottom: 1px solid #ccc;
-  padding: 10px;
+.title {
+  height: 60px;
+  border-bottom: 1px solid #E1E8EE;
+  font-family: "Comic Sans MS";
+  font-weight: bold;
+  padding: 20px 30px;
+  color: #5E6977;
+  font-size: 18px;
   text-align: left;
 }
 
-.favorite-item {
-  display: flex; /* Set the parent container as a flexbox */
-  align-items: center; /* Vertically align items */
-}
-
-.favorite-item-image {
-  width: 100px; /* Set a fixed width */
-  height: 100px; /* Set a fixed height */
-  object-fit: cover; /* Maintain image aspect ratio */
-  margin-right: 15px; /* Add spacing between the image and text */
-}
-
-/* Quantity Wrapper */
-.quantity-wrapper {
+/* Item Row */
+.item {
+  padding: 20px 30px;
+  height: 120px;
   display: flex;
   align-items: center;
-  justify-content: center; /* Centers elements horizontally */
-  gap: 10px; /* Adds space between buttons and the input */
-  margin: 10px 0; /* Adds vertical margin for spacing */
+  border-bottom: 1px solid #E1E8EE;
+  position: relative;
 }
 
-/* Quantity Wrapper */
-.quantity-wrapper {
+.item:last-child {
+  border-bottom: none;
+}
+
+/* Action Buttons (Like / Delete) */
+.buttons {
+  position: relative;
+  height: 100%;
   display: flex;
-  align-items: center; /* Vertically align items */
-  justify-content: center; /* Centers elements horizontally */
-  gap: 15px; /* Increase spacing for better alignment */
-  margin: 10px 0; /* Adds vertical margin for spacing */
+  flex-direction: row; /* Change column to row for Left-Right alignment */
+  align-items: center; /* Center them vertically */
+  justify-content: center;
+  gap: 15px; /* Add space between the two buttons */
+  margin-right: 20px; /* Add space between buttons and the image */
+  min-width: 60px; /* Ensure container is wide enough for both buttons */
 }
 
-/* Quantity Input */
-.quantity-input {
-  width: 60px; /* Slightly wider for better centering */
-  text-align: center; /* Ensures number is centered */
-  font-size: 16px; /* Matches button size */
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  padding: 5px 0; /* Ensures vertical centering */
-  box-sizing: border-box; /* Maintains padding and width consistency */
-}
-
-/* Quantity Buttons */
-.quantity-btn {
-  padding: 8px 14px; /* Ensure button dimensions match input */
-  font-size: 16px;
+.delete-btn, .like-btn {
+  display: flex; /* Use flex to center the icon inside the button */
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+  width: 24px;
+  height: 24px;
+  color: #C5C5C5; /* Default gray icon color */
+  transition: all 0.2s ease;
+}
+
+.delete-btn:hover { 
+  color: #E74C3C; 
+  transform: scale(1.1);
+}
+
+.like-btn.is-active, .like-btn .liked {
+  color: #E74C3C; /* Red heart when active */
+}
+
+.like-btn:hover {
+  color: #E74C3C;
+  transform: scale(1.1);
+}
+
+/* Product Image */
+.image {
+  margin-right: 30px;
+  width: 100px; /* Fixed width container */
+  text-align: center;
+}
+.image img {
+  max-width: 100%;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+/* Description */
+.description {
+  padding-top: 10px;
+  margin-right: 30px;
+  width: 140px;
+  text-align: left;
+}
+
+.description span {
+  display: block;
+  font-size: 14px;
+  color: #43484D;
+  font-weight: 400;
+}
+
+.description span:first-child {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.description span:last-child {
+  font-weight: 300;
+  margin-top: 8px;
+  color: #86939E;
+}
+
+/* Quantity Section */
+.quantity {
+  margin-right: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.quantity input {
+  -webkit-appearance: none;
+  border: none;
+  text-align: center;
+  width: 32px;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 300;
+  background: transparent;
+}
+
+.plus-btn, .minus-btn {
+  width: 30px;
+  height: 30px;
+  background-color: #E1E8EE;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  transition: background-color 0.3s ease;
+  color: #5E6977;
+  font-size: 12px;
+  transition: background-color 0.2s;
 }
 
-.quantity-btn:hover {
-  background-color: #e0e0e0;
+.plus-btn:hover, .minus-btn:hover {
+  background-color: #d0dbe4;
 }
 
-/* Common styles for buttons */
-.view-product-button,
-.unfavourite-button {
-  padding: 10px 16px; /* Equal padding for consistency */
-  font-size: 14px; /* Uniform font size */
-  border: none; /* Remove borders */
-  border-radius: 16px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor */
-  transition: transform 0.2s ease, background-color 0.2s ease; /* Add hover and transform effect */
-  margin-right: 8px; /* Add spacing between buttons */
-  text-align: center; /* Center align text */
-  display: inline-block; /* Ensure buttons are inline-block */
+.plus-btn:focus, .minus-btn:focus {
+  outline: none;
 }
 
-/* Add-to-Cart button styles */
-.view-product-button {
-  background-color: #f4a261; /* Orange color */
-  color: white; /* White text */
+/* Total Price */
+.total-price {
+  width: 80px;
+  text-align: center;
+  font-size: 16px;
+  color: #43484D;
+  font-weight: 500;
 }
 
-.view-product-button:hover {
-  background-color: #e76f51; /* Darker orange on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+/* --- Footer & Checkout --- */
+.cart-footer {
+    padding: 20px 30px;
+    border-top: 2px solid #E1E8EE;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #fafafa;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
-/* Unfavourite button styles */
-.unfavourite-button {
-  background-color: #ff4d4d; /* Light red background */
-  color: white; /* White text */
+.cart-summary {
+    font-size: 18px;
+    color: #43484D;
 }
 
-.unfavourite-button:hover {
-  background-color: #ff1a1a; /* Darker red on hover */
-  transform: scale(1.05); /* Slightly enlarge on hover */
+.grand-total {
+    font-weight: bold;
+    margin-left: 10px;
+    color: #4f250f;
+}
 
-  color: white;
-  background-color: #28a745; /* Green for 'Go' action */
-  border: none;
-  border-radius: 8px;
+.checkout-btn {
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 20px; /* Rounded pill shape */
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  color: #41403e;
   cursor: pointer;
-  margin-top: 20px;
-  transition: background-color 0.3s ease, transform 0.2s ease;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  font-family: "Comic Sans MS", sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: all 235ms ease-in-out;
+  user-select: none;
+  width: 140px;
 }
 
 .checkout-btn:hover {
-  background-color: #218838;
-  transform: translateY(-2px);
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+  background-color: #f0f0f0;
 }
 
-.checkout-btn:active {
-  transform: translateY(0);
+/* --- Misc & Empty States --- */
+.empty-msg {
+    padding: 40px;
+    text-align: center;
+    color: #888;
+    font-size: 1.1rem;
 }
 
-/* Cart Summary Styling Update */
-.cart-summary {
-  margin-top: 25px;
-  padding-top: 15px;
-  border-top: 2px solid #f0f0f0;
-  font-size: 20px;
-  font-weight: 800;
-  text-align: right;
-  color: #333;
+.actions {
+    margin-left: auto;
+    display: flex;
+    gap: 10px;
 }
 
+.btn-view, .btn-remove {
+  margin-top: 10px;
+  background-color: #fff;
+  border: 2px solid #000;
+  border-radius: 20px; /* Rounded pill shape */
+  box-shadow: rgba(0, 0, 0, .2) 15px 28px 25px -18px;
+  color: #41403e;
+  cursor: pointer;
+  font-family: "Comic Sans MS", sans-serif;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  transition: all 235ms ease-in-out;
+  user-select: none;
+  width: 100px;
+}
+
+.btn-view:hover, .btn-remove:hover {
+  box-shadow: rgba(0, 0, 0, .3) 2px 8px 8px -5px;
+  transform: translate3d(0, 2px, 0);
+  background-color: #f0f0f0;
+}
+/* Animation */
+@keyframes popOut {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@media (max-width: 600px) {
+    .item {
+        flex-wrap: wrap;
+        height: auto;
+        justify-content: center;
+        text-align: center;
+    }
+    .image, .description, .quantity, .total-price {
+        margin: 10px;
+        width: 100%;
+        text-align: center;
+    }
+    .buttons {
+        flex-direction: row;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+}

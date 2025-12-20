@@ -3,20 +3,18 @@ import "./Admin.css";
 
 const Admin = () => {
   const [products, setProducts] = useState([]);
-  // [UPDATED] Added 'quantity' and 'id' to state
   const [productForm, setProductForm] = useState({
-    id: null, // null means adding, value means editing
+    id: null,
     name: "",
     price: "",
     description: "",
     category: "",
-    quantity: "", // New field
+    quantity: "",
     imageFile: null
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Fetch products
   useEffect(() => {
     fetchProducts();
   }, []);
@@ -32,7 +30,6 @@ const Admin = () => {
     setProductForm({ ...productForm, imageFile: e.target.files[0] });
   };
 
-  // [NEW] Populate form for editing
   const handleEditClick = (product) => {
     setProductForm({
       id: product.id,
@@ -41,12 +38,11 @@ const Admin = () => {
       description: product.description,
       category: product.category,
       quantity: product.quantity || 0,
-      imageFile: null // Keep null unless they want to change it
+      imageFile: null
     });
-    window.scrollTo(0, 0); // Scroll to form
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // [NEW] Cancel Edit
   const handleCancelEdit = () => {
     setProductForm({ id: null, name: "", price: "", description: "", category: "", quantity: "", imageFile: null });
   };
@@ -68,7 +64,6 @@ const Admin = () => {
     if (imageFile) formData.append("image", imageFile);
 
     try {
-      // [UPDATED] Logic to switch between POST (Add) and PUT (Update)
       const url = id ? `/api/products/${id}` : "/api/products";
       const method = id ? "PUT" : "POST";
 
@@ -79,8 +74,8 @@ const Admin = () => {
 
       if (response.ok) {
         alert(id ? "Product Updated!" : "Product Added!");
-        fetchProducts(); // Refresh list
-        handleCancelEdit(); // Reset form
+        fetchProducts();
+        handleCancelEdit();
       } else {
         const msg = await response.text();
         setError(msg);
@@ -93,7 +88,7 @@ const Admin = () => {
   };
 
   const handleRemoveProduct = async (id) => {
-    if(!window.confirm("Are you sure?")) return;
+    if(!window.confirm("Are you sure you want to delete this product?")) return;
     await fetch(`/api/products/${id}`, { method: "DELETE" });
     fetchProducts();
   };
@@ -102,76 +97,105 @@ const Admin = () => {
     <div className="admin-container">
       <h1>Admin Dashboard</h1>
 
-      <div className="add-product">
-        <h2>{productForm.id ? "Edit Product" : "Add New Product"}</h2>
+      <div className="admin-card form-section">
+        <h2 className="form-title">{productForm.id ? "Edit Product" : "Add New Product"}</h2>
         
-        <input
-          type="text" placeholder="Name" value={productForm.name}
-          onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
-        />
-        <div style={{display: 'flex', gap: '10px', width: '50%'}}>
+        <div className="form-group">
             <input
-            type="number" placeholder="Price" value={productForm.price}
-            onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-            />
-            {/* [NEW] Quantity Input */}
-            <input
-            type="number" placeholder="Qty" value={productForm.quantity}
-            onChange={(e) => setProductForm({ ...productForm, quantity: e.target.value })}
+              type="text" 
+              placeholder="Product Name" 
+              value={productForm.name}
+              onChange={(e) => setProductForm({ ...productForm, name: e.target.value })}
+              className="admin-input"
             />
         </div>
+
+        <div className="form-row">
+            <input
+                type="number" 
+                placeholder="Price (RM)" 
+                value={productForm.price}
+                onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+                className="admin-input"
+            />
+            <input
+                type="number" 
+                placeholder="Quantity" 
+                value={productForm.quantity}
+                onChange={(e) => setProductForm({ ...productForm, quantity: e.target.value })}
+                className="admin-input"
+            />
+        </div>
+
         <textarea
-          placeholder="Description" value={productForm.description}
+          placeholder="Product Description" 
+          value={productForm.description}
           onChange={(e) => setProductForm({ ...productForm, description: e.target.value })}
+          className="admin-input admin-textarea"
         />
-        <select
-          value={productForm.category}
-          onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
-          className="category-select"
-        >
-          <option value="">Select Category</option>
-          <option value="cat">Cat</option>
-          <option value="dog">Dog</option>
-          <option value="small-pet">Small Pet</option>
-        </select>
+
+        <div className="form-group">
+            <select
+              value={productForm.category}
+              onChange={(e) => setProductForm({ ...productForm, category: e.target.value })}
+              className="admin-input category-select"
+            >
+              <option value="">Select Category</option>
+              <option value="cat">Cat Products</option>
+              <option value="dog">Dog Products</option>
+              <option value="small-pet">Small Pet Products</option>
+            </select>
+        </div>
 
         <label className="image-upload-label">
-          {productForm.id ? "Change Image (Optional):" : "Product Image:"}
-          <input type="file" accept="image/*" onChange={handleImageChange} />
+          {productForm.id ? "Update Image (Optional):" : "Upload Image:"}
+          <div className="file-input-wrapper">
+             <input type="file" accept="image/*" onChange={handleImageChange} />
+             <i className="fas fa-cloud-upload-alt"></i>
+          </div>
         </label>
 
-        <div style={{display: 'flex', gap: '10px', justifyContent: 'center', width: '100%'}}>
-            <button className="add-btn" onClick={handleSubmit} disabled={loading}>
-            {loading ? "Saving..." : (productForm.id ? "Update Product" : "Add Product")}
+        <div className="button-group">
+            <button className="primary-btn" onClick={handleSubmit} disabled={loading}>
+                {loading ? "Saving..." : (productForm.id ? "Update Product" : "Add Product")}
             </button>
             {productForm.id && (
-                <button className="remove-btn" onClick={handleCancelEdit} style={{backgroundColor: '#666', marginTop: 0}}>
+                <button className="cancel-btn" onClick={handleCancelEdit}>
                     Cancel
                 </button>
             )}
         </div>
+        
+        {error && <p className="error-message">{error}</p>}
       </div>
 
-      {error && <p className="error-message">{error}</p>}
+      <div className="admin-divider">
+        <span>Current Inventory</span>
+      </div>
 
       <div className="product-list">
         {products.map((product) => (
-          <div key={product.id} className="product-card">
-             <img 
-              src={product.image ? `data:${product.imageType};base64,${product.image}` : "/default-image.png"} 
-              alt={product.name} 
-              className="product-image" 
-            />
-            <h3>{product.name}</h3>
-            <p>RM {product.price} | Stock: {product.quantity}</p>
-            
-            {/* [NEW] Edit Button */}
-            <button className="view-product-button" style={{marginTop: '10px'}} onClick={() => handleEditClick(product)}>
-                Edit
-            </button>
-            <button className="remove-btn" onClick={() => handleRemoveProduct(product.id)}>
-              Remove
-            </button>
+          <div key={product.id} className="admin-product-card">
+             <div className="card-image-wrapper">
+                 <img 
+                  src={product.image ? `data:${product.imageType};base64,${product.image}` : "/default-image.png"} 
+                  alt={product.name} 
+                  className="product-image" 
+                />
+             </div>
+            <div className="card-details">
+                <h3>{product.name}</h3>
+                <p className="card-meta">RM {product.price} • {product.quantity} in stock</p>
+                
+                <div className="card-actions">
+                    <button className="edit-action-btn" onClick={() => handleEditClick(product)}>
+                        <i className="fas fa-edit"></i> Edit
+                    </button>
+                    <button className="delete-action-btn" onClick={() => handleRemoveProduct(product.id)}>
+                        <i className="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
           </div>
         ))}
       </div>

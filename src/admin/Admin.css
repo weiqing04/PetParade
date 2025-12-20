@@ -1,180 +1,264 @@
+/* Container & Global Font */
 .admin-container {
-  padding: 20px;
+  padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
+  font-family: "Comic Sans MS", "Arial", sans-serif;
+  background-color: #FCFCF3; /* Global background match */
+  min-height: 100vh;
 }
 
 h1 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 2.5rem;
+  letter-spacing: 1px;
+}
+
+/* --- Form Card Styles --- */
+.admin-card {
+  background-color: #ffffff;
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  max-width: 650px;
+  margin: 0 auto 50px auto;
+  border: 1px solid #eee;
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #4f250f; /* Brand Brown */
+  font-weight: bold;
+}
+
+/* Input Fields */
+.admin-input {
+  width: 100%;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border: 2px solid #eee;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: "Comic Sans MS", sans-serif;
+  transition: border-color 0.3s ease;
+  background-color: #fafafa;
+  box-sizing: border-box;
+}
+
+.admin-input:focus {
+  outline: none;
+  border-color: #4f250f;
+  background-color: #fff;
+}
+
+.admin-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Form Layout Helpers */
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-group {
+    width: 100%;
+}
+
+/* Image Upload */
+.image-upload-label {
+  display: block;
+  margin: 10px 0 20px;
+  font-weight: bold;
+  color: #666;
+}
+
+.file-input-wrapper {
+  margin-top: 8px;
+  padding: 10px;
+  background-color: #f4f4eb;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.primary-btn {
+  flex: 2;
+  background-color: #4f250f; /* Brand Brown */
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  font-family: "Comic Sans MS", sans-serif;
+  transition: transform 0.2s, background 0.2s;
+  box-shadow: 0 4px 10px rgba(79, 37, 15, 0.2);
+}
+
+.primary-btn:hover {
+  background-color: #6d3b1f;
+  transform: translateY(-2px);
+}
+
+.cancel-btn {
+  flex: 1;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  color: #666;
+  padding: 12px;
+  border-radius: 25px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  font-family: "Comic Sans MS", sans-serif;
+  transition: all 0.2s;
+}
+
+.cancel-btn:hover {
+  background-color: #f0f0f0;
   color: #333;
 }
 
-/* --- Form Styles --- */
-.add-product {
+/* --- Divider --- */
+.admin-divider {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  margin-bottom: 40px;
-  padding: 30px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
+  text-align: center;
+  margin: 40px 0;
+  color: #888;
 }
-
-.add-product h2 {
-  margin-bottom: 20px;
-  color: #444;
-}
-
-/* Input Styling */
-.add-product input,
-.add-product textarea,
-.add-product button,
-.category-select {
-  width: 100%; /* Changed to 100% to fill the flex container or parent */
-  margin: 10px 0;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box; /* Ensures padding doesn't break width */
-}
-
-/* Flex container for Price/Qty row */
-.add-product div[style*="display: flex"] input {
-  margin: 0; /* Remove default margin for side-by-side inputs */
-}
-
-/* Image Upload Styling */
-.image-upload-label {
-  display: block;
-  width: 100%;
-  margin: 15px 0;
-  font-weight: bold;
-  color: #555;
-  cursor: pointer;
-}
-
-.image-upload-label input {
-  margin-top: 5px;
-  padding: 5px;
-  border: 1px dashed #ccc;
-  background-color: #f8f8f8;
-}
-
-.file-name {
-  display: inline-block;
-  margin-left: 10px;
-  font-size: 0.9em;
-  color: #2196F3;
-  font-style: italic;
-}
-
-/* --- Button Styles --- */
-.add-btn {
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-  flex: 1; /* Allow buttons to share space */
-}
-
-.add-btn:hover {
-  background-color: #45a049;
-}
-
-.add-btn:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Edit Button (Specific to Admin to override global styles if needed) */
-.view-product-button {
-  background-color: #2196F3; /* Blue for Edit */
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-right: 5px;
-  transition: transform 0.2s;
-}
-
-.view-product-button:hover {
-  background-color: #1976D2;
-  transform: scale(1.05);
-}
-
-/* Remove/Cancel Button */
-.remove-btn {
-  background-color: #ff4d4f;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  margin-top: 0; /* Reset margin */
-  transition: background 0.3s;
+.admin-divider::before, .admin-divider::after {
+  content: '';
   flex: 1;
+  border-bottom: 1px solid #ddd;
 }
-
-.remove-btn:hover {
-  background-color: #ff7875;
+.admin-divider span {
+  padding: 0 15px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #aaa;
 }
 
 /* --- Product List Grid --- */
 .product-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 25px;
+  gap: 30px;
   justify-content: center;
 }
 
-.product-card {
-  width: 240px;
-  border: 1px solid #eee;
-  border-radius: 8px;
+.admin-product-card {
+  width: 250px;
+  background-color: #f4f4eb; /* Match Product Card bg */
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease;
+  border: 1px solid #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.card-image-wrapper {
+  background-color: #fff;
+  height: 180px;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.product-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.card-details {
   padding: 15px;
   text-align: center;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-  transition: transform 0.2s;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-}
-
-.product-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: contain;
-  margin-bottom: 10px;
-}
-
-.product-card h3 {
+.card-details h3 {
+  margin: 0 0 5px 0;
   font-size: 1.1rem;
-  margin: 10px 0;
   color: #333;
 }
 
-.product-card p {
-  font-size: 0.95rem;
+.card-meta {
+  font-size: 0.9rem;
   color: #666;
-  margin: 5px 0 15px;
+  margin-bottom: 15px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.edit-action-btn {
+  background-color: #fff;
+  border: 2px solid #4f250f;
+  color: #4f250f;
+  padding: 6px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  flex: 1;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.edit-action-btn:hover {
+  background-color: #4f250f;
+  color: #fff;
+}
+
+.delete-action-btn {
+  background-color: #fff;
+  border: 2px solid #e74c3c;
+  color: #e74c3c;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.delete-action-btn:hover {
+  background-color: #e74c3c;
+  color: #fff;
 }
 
 .error-message {
-  color: red;
+  color: #e74c3c;
   text-align: center;
-  margin: 10px 0;
+  margin-top: 15px;
+  font-weight: bold;
 }

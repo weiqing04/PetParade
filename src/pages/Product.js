@@ -72,7 +72,7 @@ const Modal = ({ product, closeModal, addToCart }) => {
     <div className="modal-overlay">
       <div className="modal-card">
         <button className="close-btn" onClick={closeModal}>
-          X
+          <i className="fas fa-times"></i>
         </button>
         {/* [MODIFIED] This img tag also displays the Base64 image */}
         <img 
@@ -89,18 +89,18 @@ const Modal = ({ product, closeModal, addToCart }) => {
             className="quantity-btn"
             onClick={() => handleQuantityChange("decrement")}
           >
-            −
+            <i className="fas fa-minus"></i>
           </button>
           <input type="number" value={quantity} readOnly className="quantity-input" />
           <button
             className="quantity-btn"
             onClick={() => handleQuantityChange("increment")}
           >
-            +
+            <i className="fas fa-plus"></i>
           </button>
         </div>
 
-        <button className="add-to-cart" onClick={handleAddToCart}>
+        <button className="_add-to-cart" onClick={handleAddToCart}>
           Add to Cart
         </button>
       </div>
