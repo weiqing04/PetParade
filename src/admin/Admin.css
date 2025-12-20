@@ -1,7 +1,6 @@
 /* Container & Global Font */
 .admin-container {
   padding: 40px 20px;
-  max-width: 1200px;
   margin: 0 auto;
   font-family: "Comic Sans MS", "Arial", sans-serif;
   background-color: #FCFCF3; /* Global background match */
