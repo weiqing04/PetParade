@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "users")
 public class User {
+    // ... (Keep existing fields: id, username, password, email, role) ...
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     
@@ -13,15 +15,26 @@ public class User {
     private String username;
     
     @Column(nullable = false)
-    @JsonIgnore // Never send the password back to the client
+    @JsonIgnore
     private String password;
     
     @Column(nullable = false, unique = true)
     private String email;
     
     private String role;
-    
-    // Getters and Setters...
+
+    @Lob
+    @Column(length = 1000000) // Increase size limit for images
+    private byte[] profilePicture;
+
+    private String imageType; // To store "image/jpeg", "image/png" etc.
+
+    public byte[] getProfilePicture() { return profilePicture; }
+    public void setProfilePicture(byte[] profilePicture) { this.profilePicture = profilePicture; }
+
+    public String getImageType() { return imageType; }
+    public void setImageType(String imageType) { this.imageType = imageType; }
+
     public Integer getId() { return id; }
     public String getUsername() { return username; }
     public String getPassword() { return password; }

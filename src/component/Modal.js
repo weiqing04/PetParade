@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Modal.css";
 import { useCart } from "../CartContext";
 import { useFavourites } from "../Favourite";
@@ -9,9 +9,73 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
   const { favourites, addToFavourites, removeFromFavourites } = useFavourites();
   const navigate = useNavigate();
 
+  // --- State for Profile Picture Upload ---
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [uploadStatus, setUploadStatus] = useState("");
+  const [imageKey, setImageKey] = useState(Date.now()); // Forces image refresh
+
+  // --- Ref for the hidden file input (for "Change Photo" button) ---
+  const fileInputRef = useRef(null);
+
+  // Reset state when modal opens/closes
+  useEffect(() => {
+    if (isOpen) {
+        setSelectedFile(null);
+        setPreview(null);
+        setUploadStatus("");
+    }
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
-  // Helper to check if item is in favourites
+  // --- Profile Picture Handlers ---
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      setPreview(URL.createObjectURL(file)); // Show immediate preview
+    }
+  };
+
+  const handleUploadProfilePic = async () => {
+    if (!selectedFile) return;
+    if (!userProfile?.name) {
+        setUploadStatus("Error: User not found");
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+    formData.append("username", userProfile.name);
+
+    try {
+      setUploadStatus("Uploading...");
+      const response = await fetch("/api/user/upload-photo", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        setUploadStatus("Success!");
+        setImageKey(Date.now()); // Force re-render of the image
+        
+        // Reset selection immediately so "Change Photo" comes back
+        setSelectedFile(null);
+        setPreview(null);
+
+        // Clear status message after 2 seconds
+        setTimeout(() => setUploadStatus(""), 2000);
+      } else {
+        setUploadStatus("Failed to upload.");
+      }
+    } catch (error) {
+      console.error("Upload error:", error);
+      setUploadStatus("Error occurred.");
+    }
+  };
+
+  // --- Helper Functions for Cart & Favorites ---
   const isFavorited = (productId) => {
     return Array.isArray(favourites) && favourites.some(fav => fav.id === productId);
   };
@@ -35,10 +99,8 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
   };
 
   const handleRemove = (id) => {
-      // Find the item to know its quantity for full removal
       const item = cartItems.find(i => i.id === id);
       if (item && window.confirm("Are you sure you want to remove this item?")) {
-          // Decrement by the full quantity to remove it
           updateQuantity(id, -item.quantity); 
       }
   };
@@ -84,6 +146,7 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
     }
   };
 
+  // --- Render Content Switcher ---
   const renderContent = () => {
     switch (content) {
       case "Favorite Items":
@@ -213,15 +276,65 @@ const Modal = ({ isOpen, onClose, content, handleLogout, userProfile }) => {
         );
 
       case "User Profile":
+        // Construct the image URL with timestamp to force refresh
+        const profilePicUrl = userProfile?.name 
+            ? `/api/user/photo/${userProfile.name}?t=${imageKey}`
+            : "/profile.png";
+
         return (
           <div className="user-profile-modal">
             <h2>User Profile</h2>
             <div className="user-profile">
-              <img src="/profile.png" alt="Profile" className="profile-picture" />
+              
+              {/* 1. Image Section (Top) */}
+              <div className="profile-image-container">
+                  <img 
+                    src={preview || profilePicUrl} 
+                    alt="Profile" 
+                    className="profile-picture"
+                    onError={(e) => { e.target.src = "/profile.png"; }} 
+                  />
+              </div>
+
+              {/* 2. Info Section (Middle) */}
               <div className="user-info">
                 <p><strong>Name:</strong> {userProfile?.name || "Unknown"}</p>
                 <p><strong>Email:</strong> {userProfile?.email || "Unknown"}</p>
               </div>
+
+              {/* 3. Action Buttons Section (Bottom) */}
+              <div className="profile-actions">
+                  {/* Hidden Input controlled by Ref */}
+                  <input 
+                    type="file" 
+                    ref={fileInputRef} 
+                    style={{ display: "none" }} 
+                    onChange={handleFileChange}
+                    accept="image/*"
+                  />
+                  
+                  {/* "Change Photo" Button -> Triggers Input Click */}
+                  {!selectedFile && (
+                    <button 
+                        className="edit-profile-btn" 
+                        onClick={() => fileInputRef.current.click()}
+                    >
+                        Change Photo
+                    </button>
+                  )}
+
+                  {/* "Confirm Upload" Button -> Uploads File */}
+                  {selectedFile && (
+                      <button className="upload-confirm-btn" onClick={handleUploadProfilePic}>
+                          Confirm Upload
+                      </button>
+                  )}
+
+                  {/* Status Message */}
+                  {uploadStatus && <div className="upload-status">{uploadStatus}</div>}
+              </div>
+
+              {/* 4. Logout Button (Footer) */}
               <div className="button-container">
                 <button className="logout-button" onClick={handleLogout}>Log out</button>
               </div>

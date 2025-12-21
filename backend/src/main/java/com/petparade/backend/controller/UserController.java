@@ -10,6 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
+import java.io.IOException;
 
 import java.util.Optional;
 
@@ -64,5 +68,43 @@ public class UserController {
         }
         
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Invalid action"));
+    }
+
+    // 1. Upload Profile Picture
+    @PostMapping("/upload-photo")
+    public ResponseEntity<?> uploadProfilePicture(@RequestParam("username") String username,
+                                                  @RequestParam("image") MultipartFile file) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse("User not found"));
+        }
+
+        try {
+            User user = userOptional.get();
+            user.setProfilePicture(file.getBytes());
+            user.setImageType(file.getContentType());
+            userRepository.save(user); // Save to database
+            
+            return ResponseEntity.ok(new MessageResponse("Profile picture updated successfully"));
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse("Error uploading image"));
+        }
+    }
+
+    // 2. View Profile Picture
+    @GetMapping("/photo/{username}")
+    public ResponseEntity<byte[]> getProfilePicture(@PathVariable String username) {
+        Optional<User> userOptional = userRepository.findByUsername(username);
+
+        if (userOptional.isPresent() && userOptional.get().getProfilePicture() != null) {
+            User user = userOptional.get();
+            
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, user.getImageType()) // e.g., image/jpeg
+                    .body(user.getProfilePicture());
+        }
+        
+        return ResponseEntity.notFound().build();
     }
 }
