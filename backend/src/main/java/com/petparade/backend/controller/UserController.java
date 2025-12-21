@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Handles GET /api/user?username=...
     @GetMapping
@@ -44,7 +47,7 @@ public class UserController {
             User newUser = new User();
             newUser.setUsername(username);
             newUser.setEmail(email);
-            newUser.setPassword(password); 
+            newUser.setPassword(passwordEncoder.encode(password));
             newUser.setRole("customer");
             userRepository.save(newUser);
             return ResponseEntity.ok(new MessageResponse("User registered successfully"));
@@ -52,8 +55,9 @@ public class UserController {
         } else if ("login".equals(action)) {
             // Handles Login.js
             Optional<User> user = userRepository.findByUsername(username);
-            if (user.isPresent() && user.get().getPassword().equals(password)) {
-                 // !! IMPORTANT: Use passwordEncoder.matches(password, user.get().getPassword())
+
+            // Use .matches(rawPassword, encodedPasswordFromDB)
+            if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
                 return ResponseEntity.ok(new LoginResponse("Login successful", user.get().getRole()));
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid username or password"));
