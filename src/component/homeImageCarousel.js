@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import './homeImageCarousel.css';
 
 const HomeImageCarousel = ({ images }) => {
@@ -11,12 +11,12 @@ const HomeImageCarousel = ({ images }) => {
     );
   };
 
-  // Handle the next image click
-  const nextImage = () => {
+  // 1. Wrap nextImage in useCallback so it stays stable across renders
+  const nextImage = useCallback(() => {
     setCurrentIndex((prevIndex) =>
       prevIndex === images.length - 1 ? 0 : prevIndex + 1
     );
-  };
+  }, [images.length]); // Only recreates if the number of images changes
 
   // Handle clicking on a specific image (dots)
   const goToImage = (index) => {
@@ -26,12 +26,15 @@ const HomeImageCarousel = ({ images }) => {
   // Autoplay functionality
   useEffect(() => {
     const interval = setInterval(() => {
-      nextImage(); // Automatically go to the next image every 3 seconds
+      nextImage(); 
     }, 3000);
 
     // Clear the interval on component unmount
     return () => clearInterval(interval);
-  }, [currentIndex]); // Dependency array with currentIndex to update when it changes
+    
+    // 2. Added nextImage to dependency array to satisfy ESLint
+    // I also kept currentIndex here so the timer resets if the user manually changes the slide
+  }, [nextImage, currentIndex]); 
 
   return (
     <div className="carousel-container">

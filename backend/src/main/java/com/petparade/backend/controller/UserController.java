@@ -46,7 +46,8 @@ public class UserController {
         if ("register".equals(action)) {
             // Handles Signup.js
             if (userRepository.findByUsername(username).isPresent()) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Username or email already exists"));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse
+                    ("Username or email already exists"));
             }
             User newUser = new User();
             newUser.setUsername(username);
@@ -62,9 +63,11 @@ public class UserController {
 
             // Use .matches(rawPassword, encodedPasswordFromDB)
             if (user.isPresent() && passwordEncoder.matches(password, user.get().getPassword())) {
-                return ResponseEntity.ok(new LoginResponse("Login successful", user.get().getRole()));
+                return ResponseEntity.ok(new LoginResponse
+                    ("Login successful", user.get().getRole()));
             }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid username or password"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse
+                ("Invalid username or password"));
         }
         
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new MessageResponse("Invalid action"));
